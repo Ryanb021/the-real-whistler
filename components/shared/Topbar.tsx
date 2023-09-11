@@ -16,23 +16,23 @@ function Topbar() {
             <SignOutButton>
               <div className="flex cursor-pointer">
                 <Image
-                src="/assets/logout.svg"
-                alt="logout"
-                width={24}
-                height={24}
+                  src="/assets/logout.svg"
+                  alt="logout"
+                  width={24}
+                  height={24}
                 />
               </div>
             </SignOutButton>
           </SignedIn>
         </div>
-        
+
         <OrganizationSwitcher
-        appearance={{
-          elements: {
-            organizationSwitcherTrigger:
-            "py-2 px-4"
-          }
-        }}
+          appearance={{
+            elements: {
+              organizationSwitcherTrigger:
+                "py-2 px-4"
+            }
+          }}
         />
       </div>
     </nav>
