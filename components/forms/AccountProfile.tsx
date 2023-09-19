@@ -57,12 +57,12 @@ const AccountProfile = ({ user, btnTitle }:
 
     const fileReader = new FileReader();
 
-    if(e.target.files && e.target.files.length > 0) {
+    if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
 
       setFiles(Array.from(e.target.files));
 
-      if(!file.type.includes('image')) return;
+      if (!file.type.includes('image')) return;
 
       fileReader.onload = async (event) => {
         const imageDataUrl = event.target?.result?.toString() || '';
@@ -79,10 +79,10 @@ const AccountProfile = ({ user, btnTitle }:
 
     const hasImageChanged = isBase64Image(blob);
 
-    if(hasImageChanged) {
+    if (hasImageChanged) {
       const imgRes = await startUpload(files)
 
-      if(imgRes && imgRes[0].fileUrl) {
+      if (imgRes && imgRes[0].fileUrl) {
         values.profile_photo = imgRes[0].fileUrl;
       }
     }
@@ -94,7 +94,13 @@ const AccountProfile = ({ user, btnTitle }:
       bio: values.bio,
       image: values.profile_photo,
       path: pathname
-  });
+    });
+
+    if (pathname === '/profile/edit') {
+      router.back();
+    } else {
+      router.push('/');
+    }
   }
 
   return (
