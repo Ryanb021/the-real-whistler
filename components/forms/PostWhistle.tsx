@@ -18,6 +18,8 @@ import { usePathname, useRouter } from 'next/navigation';
 
 // import { updateUser } from '@/lib/actions/user.actions';
 import { WhistleValidation } from '@/lib/validations/whistle';
+import { createWhistle } from "@/lib/actions/whistle.actions";
+import { getRandomValues } from "crypto";
 
 interface Props {
   user: {
@@ -43,8 +45,15 @@ function PostWhistle({ userId }: { userId: string }) {
     }
   })
 
-  const onSubmit = () => {
+  const onSubmit = async (values: z.infer<typeof WhistleValidation>) => {
+    await createWhistle({
+      text: values.whistle,
+      author: userId,
+      communityId: null,
+      path: pathname
+    });
 
+    router.push("/")
   }
 
   return (

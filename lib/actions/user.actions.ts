@@ -21,9 +21,11 @@ export async function updateUser({
   image,
   path,
 }: Params): Promise<void> {
+  
+  
+  try {
   connectToDB();
 
-  try {
     await User.findOneAndUpdate(
       { id: userId },
       {
