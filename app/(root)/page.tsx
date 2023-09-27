@@ -1,5 +1,3 @@
-"use client"
-
 import { fetchPosts } from "@/lib/actions/whistle.actions";
 
 export default async function Home() {

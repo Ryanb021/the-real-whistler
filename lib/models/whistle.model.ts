@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { ObjectId } from 'bson';
 
 const whistleSchema = new mongoose.Schema({
   text: { type: String, required: true},
