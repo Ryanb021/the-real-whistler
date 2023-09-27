@@ -5,6 +5,7 @@ import User from "../models/user.model";
 import Whistle from "../models/whistle.model";
 import { connectToDB } from "../mongoose";
 
+
 interface Params {
   text: string,
   author: string,
