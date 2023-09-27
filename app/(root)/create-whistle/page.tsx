@@ -17,7 +17,7 @@ async function Page() {
     <>
       <h1 className="head-text">Create Whistle</h1>
 
-      <PostWhistle userId={userInfo.id} />
+      <PostWhistle userId={userInfo._id} />
     </>
   )
 }
