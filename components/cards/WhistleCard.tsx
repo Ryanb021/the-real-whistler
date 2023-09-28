@@ -42,12 +42,12 @@ const WhistleCard = ({
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className="flex flex-col items-center">
             <Link href={`/profile/${author.id}`} className="relative h-1 w-11">
-              {/* <Image
+              <Image
                 src={author.image}
                 alt="Profile Image"
                 fill
                 className="cursor-pointer rounded-full"
-              /> */}
+              />
             </Link>
           </div>
         </div>
