@@ -9,6 +9,7 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {
@@ -28,6 +29,7 @@ const nextConfig = {
         hostname: "placehold.co",
       },
     ],
+    domains: ['utfs.io']
   },
 };
 
