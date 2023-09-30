@@ -62,3 +62,41 @@ export async function fetchPosts(pageNumber = 1, pageSize =20) {
 
   return { posts, isNext }
 }
+
+export async function fetchWhistleById(id: string) {
+  connectToDB();
+
+  try {
+
+    // TODO: populate community
+    const whistle = await Whistle.findById(id)
+    .populate({
+      path: 'author',
+      model: User,
+      select: "_id id name image"
+    })
+    .populate({
+      path: 'children',
+      populate: [
+        {
+          path: 'author',
+          model: User,
+          select: "_id id name parentId image"
+        },
+        {
+          path: 'children',
+          model: Whistle,
+          populate: {
+            path: 'author',
+            model: User,
+            select: "_id id name parentId image"
+          }
+        }
+      ]
+    }).exec();
+
+    return whistle;
+  } catch (error: any) {
+    throw new Error(`Error fetching whistle: ${error.message}`);
+  }
+}
