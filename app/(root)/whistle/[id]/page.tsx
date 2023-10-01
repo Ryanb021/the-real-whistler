@@ -1,4 +1,5 @@
 import WhistleCard from "@/components/cards/WhistleCard";
+import Comment from "@/components/forms/Comment";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { fetchWhistleById } from "@/lib/actions/whistle.actions";
 import { currentUser } from '@clerk/nextjs';
@@ -29,6 +30,31 @@ const Page = async ({ params }: { params: { id: string } }) => {
           createdAt={whistle.createdAt}
           comments={whistle.children}
         />
+      </div>
+
+      <div className="mt-7">
+        <Comment
+        whistleId={whistle.id}
+        currentUserImg={userInfo.image}
+        currentUserId={JSON.stringify(userInfo._id)}
+        />
+      </div>
+
+      <div className="mt-10">
+        {whistle.children.map((childItem: any) => (
+          <WhistleCard
+          key={childItem._id}
+          id={childItem._id}
+          currentUserId={childItem?.id || ""}
+          parentId={childItem.parentId}
+          content={childItem.text}
+          author={childItem.author}
+          community={childItem.community}
+          createdAt={childItem.createdAt}
+          comments={childItem.children}
+          isComment
+        />
+        ))}
       </div>
     </section>
   )

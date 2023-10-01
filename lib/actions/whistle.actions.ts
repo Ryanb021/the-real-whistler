@@ -100,3 +100,42 @@ export async function fetchWhistleById(id: string) {
     throw new Error(`Error fetching whistle: ${error.message}`);
   }
 }
+
+export async function addCommentToWhistle(
+  whistleId: string,
+  commentText: string,
+  userId: string,
+  path: string,
+  ) {
+    connectToDB();
+
+    try {
+      // Find original whistle by its ID
+      const originalWhistle = await Whistle.findById(whistleId);
+
+      if(!originalWhistle) {
+        throw new Error("Whistle not found!")
+      }
+
+      // Create a new whistle with the comment text
+      const commentWhistle = new Whistle({
+        text: commentText,
+        author: userId,
+        parentId: whistleId,
+      })
+
+      // Save the new whistle
+      const savedCommentWhistle = await commentWhistle.save();
+
+      // Update original whistle to include the new comment
+      originalWhistle.children.push(savedCommentWhistle._id);
+
+      // Save the original whistle
+      await originalWhistle.save();
+
+      revalidatePath(path);
+    } catch (error: any) {
+      throw new Error(`Error adding comment to whistle: ${error.message}`);
+    }
+  
+}
