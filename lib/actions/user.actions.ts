@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
+import Whistle from "../models/whistle.model";
 
 interface Params {
   userId: string;
@@ -59,4 +60,32 @@ export async function fetchUser(userId: string) {
     throw new Error(`Failed to fetch user: ${error.message}`)
   }
 
+}
+
+export async function fetchUserPosts(userId: string) {
+  try {
+    connectToDB();
+
+    //Find all whistles authored by the user witht he given user id
+
+    // TODO: populate community
+    const whistles = await User.findOne({ id: userId })
+    .populate({
+      path: 'whistles',
+      model: Whistle,
+      populate: {
+        path: 'children',
+        model: Whistle,
+        populate: {
+          path: 'author',
+          model: User,
+          select: 'name image id'
+        }
+      }
+    })
+
+    return whistles;
+  } catch (error: any) {
+    throw new Error(`Failed to fetch posts: ${error.message}`);
+  }
 }
