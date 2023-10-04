@@ -1,3 +1,7 @@
+import { fetchUserPosts } from "@/lib/actions/user.actions";
+import { redirect } from "next/navigation";
+import WhistleCard from "../cards/WhistleCard";
+
 interface Props {
   currentUserId: string;
   accountId: string;
@@ -5,11 +9,29 @@ interface Props {
 }
 
 const WhistlesTab = async ({ currentUserId, accountId, accountType }: Props) => {
-  // TODO: Fetch profile whistles
+  let result = await fetchUserPosts(accountId);
+
+  if(!result) redirect('/')
 
   return (
-    <section>
-      WhistlesTab
+    <section className="mt-9 flex flex-col gap-10">
+      {result.whistles.map((whistle: any) => (
+        <WhistleCard
+        key={whistle._id}
+        id={whistle._id}
+        currentUserId={currentUserId}
+        parentId={whistle.parentId}
+        content={whistle.text}
+        author={
+          accountType === 'User'
+          ? { name: result.name, image: result.image, id: result.id}:
+          { name: whistle.author.name, image: whistle.author.image, id: whistle.author.id }
+        } // TODO
+        community={whistle.community} // TODO
+        createdAt={whistle.createdAt}
+        comments={whistle.children}
+      />
+      ))}
     </section>
   )
 }
