@@ -35,20 +35,20 @@ async function Page() {
           <p className="no-result">No users</p>
         ) : (
           <>
-          {result.users.map((person) => (
-            <UserCard 
-            key={person.id}
-            id={person.id}
-            name={person.name}
-            username={person.username}
-            imgUrl={person.image}
-            personType='User'
-            />
-          ))}
+            {result.users.map((person) => (
+              <UserCard
+                key={person.id}
+                id={person.id}
+                name={person.name}
+                username={person.username}
+                imgUrl={person.image}
+                personType='User'
+              />
+            ))}
           </>
         )}
       </div>
-      </section>
+    </section>
   )
 }
 
