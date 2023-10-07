@@ -1,13 +1,8 @@
-import ProfileHeader from "@/components/shared/ProfileHeader";
 import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
-import { profileTabs } from "@/constants";
-import Image from "next/image";
-import WhistlesTab from "@/components/shared/WhistlesTab";
 import UserCard from "@/components/cards/UserCard";
-
 
 async function Page() {
   const user = await currentUser();
@@ -21,8 +16,8 @@ async function Page() {
     userId: user.id,
     searchString: '',
     pageNumber: 1,
-    pageSize: 25
-  })
+    pageSize: 25,
+  });
 
   return (
     <section>
@@ -35,6 +30,7 @@ async function Page() {
           <p className="no-result">No users</p>
         ) : (
           <>
+            console.log(person);
             {result.users.map((person) => (
               <UserCard
                 key={person.id}
@@ -49,7 +45,7 @@ async function Page() {
         )}
       </div>
     </section>
-  )
+  );
 }
 
 export default Page;
