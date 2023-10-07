@@ -112,14 +112,14 @@ export async function fetchUsers({
     const regex = new RegExp(searchString, "i");
 
     const query: FilterQuery<typeof User> = {
-      id: { $ne: userId }
-    }
+      id: { $ne: userId },
+    };
 
     if(searchString.trim() !== '') {
       query.$or = [
         { username: { $regex: regex } },
         { name: { $regex: regex } }
-      ]
+      ];
     }
 
     const sortOptions = { createdAt: sortBy };

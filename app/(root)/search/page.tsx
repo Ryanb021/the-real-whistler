@@ -18,7 +18,7 @@ async function Page() {
     pageNumber: 1,
     pageSize: 25,
   });
-
+  
   return (
     <section>
       <h1 className="head-text mb-10">Search</h1>
@@ -30,7 +30,6 @@ async function Page() {
           <p className="no-result">No users</p>
         ) : (
           <>
-            console.log(person);
             {result.users.map((person) => (
               <UserCard
                 key={person.id}
