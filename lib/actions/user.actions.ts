@@ -74,15 +74,17 @@ export async function fetchUserPosts(userId: string) {
       .populate({
         path: 'whistles',
         model: Whistle,
-        populate: {
-          path: 'children',
-          model: Whistle,
-          populate: {
-            path: 'author',
-            model: User,
-            select: 'name image id'
+        populate: [
+          {
+            path: 'children',
+            model: Whistle,
+            populate: {
+              path: 'author',
+              model: User,
+              select: 'name image id'
+            }
           }
-        }
+        ]
       })
 
     return whistles;
@@ -97,7 +99,7 @@ export async function fetchUsers({
   pageNumber = 1,
   pageSize = 20,
   sortBy = "desc",
-} : {
+}: {
   userId: string;
   searchString?: string;
   pageNumber?: number;
@@ -115,7 +117,7 @@ export async function fetchUsers({
       id: { $ne: userId },
     };
 
-    if(searchString.trim() !== '') {
+    if (searchString.trim() !== '') {
       query.$or = [
         { username: { $regex: regex } },
         { name: { $regex: regex } }
@@ -125,9 +127,9 @@ export async function fetchUsers({
     const sortOptions = { createdAt: sortBy };
 
     const usersQuery = User.findOne(query)
-    .sort(sortOptions)
-    .skip(skipAmount)
-    .limit(pageSize);
+      .sort(sortOptions)
+      .skip(skipAmount)
+      .limit(pageSize);
 
     const totalUsersCount = await User.countDocuments(query);
 
