@@ -126,7 +126,7 @@ export async function fetchUsers({
 
     const sortOptions = { createdAt: sortBy };
 
-    const usersQuery = User.findOne(query)
+    const usersQuery = User.find(query)
       .sort(sortOptions)
       .skip(skipAmount)
       .limit(pageSize);
