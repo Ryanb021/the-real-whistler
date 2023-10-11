@@ -142,3 +142,30 @@ export async function fetchUsers({
     throw new Error(`Failed to fetch users: ${error.message}`)
   }
 }
+
+export async function getActivity(userId: string) {
+  try {
+    connectToDB();
+
+    // find all whistles created by the user
+    const userWhistles = await Whistle.find({ author: userId });
+
+    // Collect all the child whistle ids (replies) from the user field
+    const childWhistleIds = userWhistles.reduce((acc, userWhistle) => {
+      return acc.concat(userWhistle.children);
+    }, []);
+
+    const replies = await Whistle.find({
+      _id: { $in: childWhistleIds },
+      author: { $ne: userId }
+    }).populate({
+        path: 'author',
+        model: User,
+        select: 'name image_id'
+      })
+
+  return replies;
+} catch (error: any) {
+  throw new Error(`Failed to fetch activity: ${error.message}`)
+}
+}
