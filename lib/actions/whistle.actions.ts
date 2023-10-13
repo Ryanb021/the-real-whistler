@@ -20,7 +20,7 @@ export async function createWhistle({ text, author, communityId, path }: Params)
     const createdWhistle = await Whistle.create({
       text,
       author,
-      community: null,
+      community: communityId,
     });
 
     // Update user model

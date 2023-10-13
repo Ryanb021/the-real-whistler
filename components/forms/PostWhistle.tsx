@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useOrganization } from '@clerk/nextjs';
+
 import { usePathname, useRouter } from 'next/navigation';
 
 // import { updateUser } from '@/lib/actions/user.actions';
@@ -34,6 +36,7 @@ interface Props {
 function PostWhistle({ userId }: { userId: string }) {
   const router = useRouter();
   const pathname = usePathname();
+  const { organization } = useOrganization();
 
   const form = useForm({
     resolver: zodResolver(WhistleValidation),
@@ -47,7 +50,7 @@ function PostWhistle({ userId }: { userId: string }) {
     await createWhistle({
       text: values.whistle,
       author: userId,
-      communityId: null,
+      communityId: organization ? organization.id : null,
       path: pathname
     });
 
