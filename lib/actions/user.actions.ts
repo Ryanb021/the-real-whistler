@@ -5,6 +5,7 @@ import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 import Whistle from "../models/whistle.model";
 import { FilterQuery, SortOrder } from "mongoose";
+import Community from "../models/community.model";
 
 interface Params {
   userId: string;
@@ -53,10 +54,10 @@ export async function fetchUser(userId: string) {
 
     return await User
       .findOne({ id: userId })
-    // .populate({
-    //   path: 'communities',
-    //   model: Community
-    // })
+      .populate({
+        path: 'communities',
+        model: Community,
+      });
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`)
   }
@@ -67,21 +68,25 @@ export async function fetchUserPosts(userId: string) {
   try {
     connectToDB();
 
-    //Find all whistles authored by the user witht he given user id
+    //Find all whistles authored by the user with the given user id
 
-    // TODO: populate community
     const whistles = await User.findOne({ id: userId })
       .populate({
         path: 'whistles',
         model: Whistle,
         populate: [
           {
+            path: "community",
+            model: Community,
+            select: "name id image _id", // Select the "name" and "_id" fields from the "community" model
+          },
+          {
             path: 'children',
             model: Whistle,
             populate: {
               path: 'author',
               model: User,
-              select: 'name image id'
+              select: 'name image id' // Select the "name" and "_id" fields from the "User" model
             }
           }
         ]
@@ -159,13 +164,13 @@ export async function getActivity(userId: string) {
       _id: { $in: childWhistleIds },
       author: { $ne: userId }
     }).populate({
-        path: 'author',
-        model: User,
-        select: 'name image _id'
-      })
+      path: 'author',
+      model: User,
+      select: 'name image _id'
+    })
 
-  return replies;
-} catch (error: any) {
-  throw new Error(`Failed to fetch activity: ${error.message}`)
-}
+    return replies;
+  } catch (error: any) {
+    throw new Error(`Failed to fetch activity: ${error.message}`)
+  }
 }
