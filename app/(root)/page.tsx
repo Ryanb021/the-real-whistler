@@ -2,12 +2,25 @@ import WhistleCard from "@/components/cards/WhistleCard";
 import { fetchPosts } from "@/lib/actions/whistle.actions";
 import { currentUser } from "@clerk/nextjs";
 
-export default async function Home() {
+import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
+import Pagination from "@/components/shared/Pagination";
+import { redirect } from "next/navigation";
 
-  const result = await fetchPosts(1, 30);
+async function Home ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) {
   const user = await currentUser();
+  if(!user) return null;
 
-  console.log(result);
+  const userInfo = await fetchUser(user.id);
+  if(!userInfo?.onboarded) redirect("/onboarding");
+
+  const result = await fetchPosts(
+    searchParams.page ? +searchParams.page : 1,
+    30
+  );
 
   return (
     <>
@@ -34,6 +47,14 @@ export default async function Home() {
           </>
         )}
       </section >
+
+      <Pagination 
+        path='/'
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={result.isNext}
+      />
     </>
-  )
+  );
 }
+
+export default Home;
