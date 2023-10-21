@@ -71,35 +71,35 @@ export async function deleteWhistle(id: string, path: string): Promise<void> {
     }
 
     // Fetch all child whistles and their descendants recursively
-    const descendantWhistles = fetchAllChildWhistles(id);
+    const descendantWhistles = await fetchAllChildWhistles(id);
 
     //Get all descendant whistle IDs including the main whistle ID and child whistle IDs
     const descendantWhistleIds = [
       id,
-      ...(await descendantWhistles).map((whistle) => whistle._id),
+      ...descendantWhistles.map((whistle) => whistle._id),
     ];
 
     // Extract the authorIds and communityIds to update User and Community models respectively
     const uniqueAuthorIds = new Set(
       [
-        ...(await descendantWhistles).map((whistle) => whistle.author?._id.toString()), // Use optional chaining to handle posiible undefined values
+        ...descendantWhistles.map((whistle) => whistle.author?._id.toString()), // Use optional chaining to handle posiible undefined values
         mainWhistle.author?._id?.toString(),
       ].filter((id) => id !== undefined)
     );
 
     const uniqueCommunityIds = new Set(
       [
-        ...(await descendantWhistles).map((whistle) => whistle.community?._id?.toString()), // Use optional chaining to handle possible undefined values
+        ...await descendantWhistles.map((whistle) => whistle.community?._id?.toString()), // Use optional chaining to handle possible undefined values
         mainWhistle.community?._id?.toString(),
       ].filter((id) => id !== undefined)
     );
 
      // Recursively delete child threads and their descendants
-     await Whistle.deleteMany({ _id: { $in: descendantWhistleIds }});
+     await Whistle.deleteMany({ _id: { $in: descendantWhistleIds } });
 
      // Update User model
      await User.updateMany(
-      { _id: { in: Array.from(uniqueAuthorIds) } },
+      { _id: { $in: Array.from(uniqueAuthorIds) } },
       { $pull: { whistles: { $in: descendantWhistleIds} } }
      );
 
