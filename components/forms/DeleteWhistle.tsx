@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ interface Props {
   isComment?: boolean;
 }
 
-function deleteWhistle({
+function DeleteWhistle({
   whistleId,
   currentUserId,
   authorId,
@@ -26,9 +26,9 @@ function deleteWhistle({
   if (currentUserId !== authorId || pathname === "/") return null;
 
   return (
-    <Image 
-      src='assets/delete.svg'
-      alt='delete'
+    <Image
+      src='/assets/delete.svg'
+      alt='delte'
       width={18}
       height={18}
       className='cursor-pointer object-contain'
@@ -42,4 +42,4 @@ function deleteWhistle({
   );
 }
 
-export default deleteWhistle;
+export default DeleteWhistle;
